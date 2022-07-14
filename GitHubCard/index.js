@@ -5,18 +5,19 @@ import axios from "axios";
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
-axios.get(`https://api.github.com/users/Arbyrd33`)
-  .then(res => {
-    console.log(res.data);
-    const data = res.data;
-    cardMaker(data);
-  })
-  .catch(err=>{
-
-  })
-  .finally(()=>{
-
-  })
+// axios.get(`https://api.github.com/users/Arbyrd33`)
+//   .then(res => {
+//     console.log(res.data);
+//     const data = res.data;
+//     cardMaker(data);
+//   })
+//   .catch(err=>{
+//     console.log(`Attempt unsuccessful.`)
+//     console.log(err);
+//   })
+//   .finally(()=>{
+//     console.log(`Get request resolved!`)
+//   })
 
 
   const entryPoint = document.querySelector(".cards");
@@ -44,7 +45,6 @@ axios.get(`https://api.github.com/users/Arbyrd33`)
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
 
 const testObject = {
   avatar_url: `https://stickerly.pstatic.net/sticker_pack/X7LRrK6qM5Snm4H8rtpSA/B8S0JS/31/7f463146-816d-4382-8e34-765651476a7d.png`,
@@ -131,3 +131,21 @@ cardMaker(testObject);
     luishrd
     bigknell
 */
+
+function getUser(user){
+  axios.get(`https://api.github.com/users/${user}`)
+    .then(res => {
+      console.log(res.data);
+      const data = res.data;
+      cardMaker(data);
+    })
+}
+
+getUser(`bigknell`)
+const usersArray = [`Arbyrd33`, `reddest13`, `chance10113`, `tetondan`, `dustinmyers`, `justsml`, `luishrd`, ];
+
+usersArray.forEach(user => {
+  console.log(user);
+  getUser(user);
+
+})
