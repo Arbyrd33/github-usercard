@@ -57,6 +57,7 @@ const info = document.createElement("div");
   name.classList.add("name");
   userName.classList.add("username");
   stretchDiv.classList.add("hidden")
+  followersDiv.classList.add("hidden")
   bioButton.classList.add("button");
   followersButton.classList.add("button");
 
@@ -73,7 +74,7 @@ const info = document.createElement("div");
   bio.textContent = object.bio;
   bioButton.textContent = `View Bio`;
   followersButton.textContent = `See Followers`;
-  followersDiv.textContent = `GitHub users following ${object.login}: `
+  followersDiv.textContent = `GitHub users following ${object.login}: ${getFollowers(object.followers_url)}`
 
 
 
@@ -126,25 +127,6 @@ cardMaker(testObject);
       </div>
     </div>
 */
-function getFollowers(url){
-  console.log(`followers:   `, url)
-  axios.get(url)
-    .then(res => {
-      // console.log(`getFollowers data:   `, res.data);
-      const data = res.data;
-      for(let i  = 0; i < data.length; i++){
-        // console.log(data[i].login)
-        const follower = data[i].login
-
-
-        if (data.length <= 1){
-          console.log(`This user isn't super popular... yet.`)
-        } else if (data.length > 0){
-          console.log(`follower: `, follower)
-        }
-      }
-    })
-}
 
 function getUser(user){
   axios.get(`https://api.github.com/users/${user}`)
@@ -171,3 +153,29 @@ usersArray.forEach(user => {
   getUser(user);
 
 })
+
+function getFollowers(url){
+  console.log(`followers:   `, url)
+  const list = document.createElement("ul");
+  axios.get(url)
+    .then(res => {
+
+      // console.log(`getFollowers data:   `, res.data);
+      const data = res.data;
+      for(let i  = 0; i < data.length; i++){
+        // console.log(data[i].login)
+        const followerLogin = data[i].login;
+        if (data.length <= 1){
+          console.log(`This user isn't super popular... yet.`)
+        } else if (data.length > 0){
+          console.log(`followerLogin: `, followerLogin);
+          const follower = document.createElement("li");
+          follower.textContent = followerLogin;
+          list.appendChild.follower;
+        }
+      }
+    })
+    .catch(err => {
+      console.log(err);
+    })
+}
