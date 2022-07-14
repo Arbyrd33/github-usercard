@@ -19,31 +19,7 @@ import axios from "axios";
 //     console.log(`Get request resolved!`)
 //   })
 
-
-  const entryPoint = document.querySelector(".cards");
-/*
-  STEP 2: Inspect and study the data coming back, this is YOUR
-    github info! You will need to understand the structure of this
-    data in order to use it to build your component function
-
-    Skip to STEP 3 (line 34).
-*/
-
-/*
-  STEP 4: Pass the data received from Github into your function,
-    and append the returned markup to the DOM as a child of .cards
-*/
-
-/*
-  STEP 5: Now that you have your own card getting added to the DOM, either
-    follow this link in your browser https://api.github.com/users/<Your github name>/followers,
-    manually find some other users' github handles, or use the list found at the
-    bottom of the page. Get at least 5 different Github usernames and add them as
-    Individual strings to the friendsArray below.
-
-    Using that array, iterate over it, requesting data for each user, creating a new card for each
-    user, and adding that card to the DOM.
-*/
+const entryPoint = document.querySelector(".cards");
 
 
 const testObject = {
@@ -69,11 +45,22 @@ const info = document.createElement("div");
   const followers = document.createElement("p");
   const following = document.createElement("p");
   const bio = document.createElement("p");
+  const stretchDiv = document.createElement("div");
+  const followersDiv = document.createElement("div");
+  const bioButton = document.createElement("button");
+  const followersButton = document.createElement("button");
+
+
 
   userCard.classList.add("card");
   info.classList.add("card-info");
   name.classList.add("name");
   userName.classList.add("username");
+  stretchDiv.classList.add("hidden")
+  bioButton.classList.add("button");
+  followersButton.classList.add("button");
+
+
   
   pfp.src = object[`avatar_url`]
   name.textContent= object.name;
@@ -84,6 +71,11 @@ const info = document.createElement("div");
   followers.textContent = `Followers: ${object.followers}`;
   following.textContent = `Following: ${object.following}`;
   bio.textContent = object.bio;
+  bioButton.textContent = `View Bio`;
+  followersButton.textContent = `See Followers`;
+  followersDiv.textContent = `GitHub users following ${object.login}: `
+
+
 
 
   userCard.appendChild(pfp);
@@ -95,10 +87,22 @@ const info = document.createElement("div");
   profile.appendChild(gHLink);
   profile.appendChild(followers);
   profile.appendChild(following);
-  profile.appendChild(bio);
+  profile.appendChild(bioButton)
+  profile.appendChild(followersButton);
+  profile.appendChild(stretchDiv);
+  stretchDiv.appendChild(bio);
+  profile.appendChild(followersDiv);
   
+  bioButton.addEventListener("click", ()=>{
+    console.log(`${object.name}'s bio opened`);
+    stretchDiv.classList.toggle("hidden");
+  })
+
+  followersButton.addEventListener("click", () => {
+    followersDiv.classList.toggle("hidden");
+  })
+
   entryPoint.appendChild(userCard);
-  console.log(userCard);
   return userCard;
 }
 
@@ -122,27 +126,45 @@ cardMaker(testObject);
       </div>
     </div>
 */
+function getFollowers(url){
+  console.log(`followers:   `, url)
+  axios.get(url)
+    .then(res => {
+      // console.log(`getFollowers data:   `, res.data);
+      const data = res.data;
+      for(let i  = 0; i < data.length; i++){
+        // console.log(data[i].login)
+        const follower = data[i].login
 
-/*
-  List of LS Instructors Github username's:
-    tetondan
-    dustinmyers
-    justsml
-    luishrd
-    bigknell
-*/
+
+        if (data.length <= 1){
+          console.log(`This user isn't super popular... yet.`)
+        } else if (data.length > 0){
+          console.log(`follower: `, follower)
+        }
+      }
+    })
+}
 
 function getUser(user){
   axios.get(`https://api.github.com/users/${user}`)
     .then(res => {
-      console.log(res.data);
-      const data = res.data;
+
+      const data = res.data
+      const followers = res.data.followers_url
       cardMaker(data);
+      getFollowers(followers)
+      
+    })
+    .catch(err => {
+      console.log(err);
     })
 }
 
-getUser(`bigknell`)
-const usersArray = [`Arbyrd33`, `reddest13`, `chance10113`, `tetondan`, `dustinmyers`, `justsml`, `luishrd`, ];
+
+
+
+const usersArray = [`Arbyrd33`, `reddest13`, `chance10113`, `CRHarding`, `bigknell`, `tetondan`, `dustinmyers`, `justsml`, `luishrd`, ];
 
 usersArray.forEach(user => {
   console.log(user);
